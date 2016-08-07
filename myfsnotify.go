@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/souravgh/fsnotify"
+	"github.com/howeyc/fsnotify"
 )
 
 type recWatcher struct {
@@ -73,7 +73,7 @@ func (r *recWatcher) Process(e *fsnotify.FileEvent) {
 		}
 		if fi.IsDir() {
 			r.watch(e.Name)
-		} else if fi.IsRegular() {
+		} else if fi.Mode().IsRegular() {
 			r.sync(e.Name)
 		}
 		return
@@ -96,7 +96,7 @@ func (r *recWatcher) scanDir(dir string) {
 		if f.IsDir() {
 			log.Println("Found dir:", path)
 			r.watch(path)
-		} else if f.IsRegular() {
+		} else if f.Mode().IsRegular() {
 			r.sync(path)
 		}
 		return nil
